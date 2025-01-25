@@ -2,7 +2,6 @@ package com.mrkunal.zencer.controller.contract;
 
 import com.mrkunal.zencer.dto.request.SignUpRequest;
 import com.mrkunal.zencer.dto.response.StandardResponse;
-import com.mrkunal.zencer.model.Entity.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;

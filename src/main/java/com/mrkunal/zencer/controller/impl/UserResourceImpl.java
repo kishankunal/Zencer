@@ -29,7 +29,7 @@ public class UserResourceImpl implements UserResource {
     public ResponseEntity<StandardResponse<String>> createUser(SignUpRequest signUpRequest, BindingResult bindingResult) {
         userService.createUser(signUpRequest);
         return ResponseEntity
-                .ok(StandardResponse.success("200", "User Created", "User Created Successfully"));
+                .ok(StandardResponse.success("200", "User Created", null));
     }
 
 

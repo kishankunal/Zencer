@@ -7,6 +7,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
+import static com.mrkunal.zencer.util.HashUtil.encryptPassword;
+
 @Repository
 public class UserRepo {
     private final SessionFactory sessionFactory;
@@ -28,6 +30,7 @@ public class UserRepo {
                 .setLocale(request.getLocale())
                 .setName(request.getName())
                 .setMobileNumber(request.getMobileNumber())
+                .setPassword(encryptPassword(request.getPassword()))
                 .build();
     }
 }

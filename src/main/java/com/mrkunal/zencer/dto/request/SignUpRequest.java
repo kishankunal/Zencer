@@ -18,17 +18,27 @@ public class SignUpRequest {
     private final String mobileNumber;
 
     @NotNull(message = "Locale cannot be null")
-    private final String locale;
+    private final Locale locale;
 
     @NotNull(message = "User type cannot be null")
     private final UserType userType;
 
+    public String getPassword() {
+        return password;
+    }
+
+    @NotNull(message = "Password cannot be null")
+    @Size(min = 8, message = "Password must be at least 8 characters long")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Password must be alphanumeric")
+    private final String password;
+
     // Constructor, getters, setters, etc.
-    public SignUpRequest(String name, String mobileNo,  String mobileNumber, String locale, UserType userType) {
+    public SignUpRequest(String name, String mobileNo, String mobileNumber, Locale locale, UserType userType, @NotNull(message = "Password cannot be null") String password) {
         this.name = name;
         this.mobileNumber = mobileNumber;
         this.locale = locale;
         this.userType = userType;
+        this.password = password;
     }
 
     public String getName() {
@@ -39,7 +49,7 @@ public class SignUpRequest {
         return mobileNumber;
     }
 
-    public String getLocale() {
+    public Locale getLocale() {
         return locale;
     }
 

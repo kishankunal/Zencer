@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 public class ValidationAspect {
     @Around("@annotation(com.mrkunal.zencer.annotation.HandleValidationError)")
     public Object handleValidationErrors(ProceedingJoinPoint joinPoint) throws Throwable {
-        System.out.println("Aspect triggered");
         Object[] args = joinPoint.getArgs();
         BindingResult bindingResult = null;
 

@@ -1,6 +1,7 @@
 package com.mrkunal.zencer.model.Entity;
 
 import com.mrkunal.zencer.model.enums.UserType;
+import com.mrkunal.zencer.model.enums.Locale;
 import lombok.ToString;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -18,6 +19,7 @@ import jakarta.persistence.PrePersist;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"mobile_no"})})
@@ -25,12 +27,16 @@ import java.util.Date;
 public class User {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", unique = true)
+    @Column(name = "row_id", unique = true)
     @Id
-    private Long userId;
+    private Long rowId;
+
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "member_id", unique = true, nullable = false, updatable = false)
+    private String userId;
 
     @JsonProperty
-    @Column(name = "mobile_no")
+    @Column(name = "mobile_no", nullable = false)
     private String mobileNumber;
 
     @JsonProperty
@@ -43,8 +49,13 @@ public class User {
     private UserType userType;
 
     @JsonProperty
+    @Column(name = "password", nullable = false, length = 256)  // Adjust length as per your hashing strategy
+    private String password;
+
+    @JsonProperty
     @Column(name = "locale", length = 64)
-    private String locale;
+    @Enumerated(EnumType.STRING)
+    private Locale locale;
 
     @Column(name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -53,12 +64,22 @@ public class User {
     @Column(name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
 
     @PrePersist
     public void prePersist() {
         Date now = new Date();
         if (createdAt == null) {
             createdAt = now;
+        }
+        if (userId == null) {
+            userId = UUID.randomUUID().toString();
         }
         updatedAt = now; // Set the current timestamp for the updatedAt column
     }
@@ -68,11 +89,11 @@ public class User {
         updatedAt = new Date(); // Update the timestamp on every update
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -100,12 +121,8 @@ public class User {
         this.userType = userType;
     }
 
-    public String getLocale() {
+    public Locale getLocale() {
         return locale;
-    }
-
-    public void setLocale(String locale) {
-        this.locale = locale;
     }
 
     public Date getCreatedAt() {
@@ -125,17 +142,14 @@ public class User {
     }
 
     public static class UserBuilder {
-
-        private Long userId;
         private String mobileNumber;
         private String name;
+        private String password;
         private UserType userType;
-        private String locale;
-        private Date createdAt;
-        private Date updatedAt;
+        private Locale locale;
 
-        public UserBuilder setUserId(Long userId) {
-            this.userId = userId;
+        public UserBuilder setPassword(String password) {
+            this.password = password;
             return this;
         }
 
@@ -154,30 +168,18 @@ public class User {
             return this;
         }
 
-        public UserBuilder setLocale(String locale) {
+        public UserBuilder setLocale(Locale locale) {
             this.locale = locale;
-            return this;
-        }
-
-        public UserBuilder setCreatedAt(Date createdAt) {
-            this.createdAt = createdAt;
-            return this;
-        }
-
-        public UserBuilder setUpdatedAt(Date updatedAt) {
-            this.updatedAt = updatedAt;
             return this;
         }
 
         public User build() {
             User user = new User();
-            user.setUserId(this.userId);
             user.setMobileNumber(this.mobileNumber);
             user.setName(this.name);
             user.setUserType(this.userType);
             user.setLocale(this.locale);
-            user.setCreatedAt(this.createdAt);
-            user.setUpdatedAt(this.updatedAt);
+            user.setPassword(this.password);
             return user;
         }
     }
