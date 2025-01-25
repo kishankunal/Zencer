@@ -3,18 +3,14 @@ package com.mrkunal.zencer.service;
 import com.mrkunal.zencer.model.Entity.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.google.inject.Inject;
 
 @Service
 public class UserService {
 
     private final SessionFactory sessionFactory;
-
-    @Autowired
+    @Inject
     public UserService(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

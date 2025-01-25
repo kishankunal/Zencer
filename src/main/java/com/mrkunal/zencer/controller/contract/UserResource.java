@@ -1,5 +1,6 @@
 package com.mrkunal.zencer.controller.contract;
 
+import com.mrkunal.zencer.dto.response.StandardResponse;
 import com.mrkunal.zencer.model.Entity.User;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
@@ -15,5 +16,5 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface UserResource {
 
     @PostMapping(path = "/signup", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<User> createUser(@Validated @RequestBody User user);
+    ResponseEntity<StandardResponse<User>> createUser(@Validated @RequestBody User user);
 }
