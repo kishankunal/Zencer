@@ -23,10 +23,6 @@ public class SignUpRequest {
     @NotNull(message = "User type cannot be null")
     private final UserType userType;
 
-    public String getPassword() {
-        return password;
-    }
-
     @NotNull(message = "Password cannot be null")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Password must be alphanumeric")
@@ -41,6 +37,9 @@ public class SignUpRequest {
         this.password = password;
     }
 
+    public String getPassword() {
+        return password;
+    }
     public String getName() {
         return name;
     }

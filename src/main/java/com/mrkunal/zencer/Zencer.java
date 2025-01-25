@@ -3,6 +3,7 @@ package com.mrkunal.zencer;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.mrkunal.zencer.module.ApplicationModule;
+import com.mrkunal.zencer.module.ExternalModule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
@@ -22,11 +23,9 @@ public class Zencer {
 	@Bean
 	public Injector guiceInjector() {
 		return Guice.createInjector(
-//				new DatabaseModule(),
-//				new ServiceModule(),
-//				new WebModule(),
-//				new IntegrationModule()
+				new ExternalModule(),
 				new ApplicationModule()
+
 		);
 	}
 }

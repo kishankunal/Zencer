@@ -13,10 +13,4 @@ public class ApplicationModule extends AbstractModule {
     protected void configure() {
         bind(UserResource.class).to(UserResourceImpl.class).in(Singleton.class);
     }
-
-    @Provides
-    public SessionFactory provideSessionFactory() {
-        // Provide Hibernate SessionFactory instance
-        return new Configuration().configure().buildSessionFactory();
-    }
 }

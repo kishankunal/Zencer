@@ -16,13 +16,18 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.TemporalType;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.PrePersist;
+import jakarta.persistence.Index;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"mobile_no"})})
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"mobile_no"})},
+        indexes = {
+                @Index(name = "idx_mobile_no", columnList = "mobile_no"),
+                @Index(name = "idx_user_id", columnList = "member_id")
+        })
 @ToString
 public class User {
 
@@ -139,6 +144,10 @@ public class User {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public static class UserBuilder {

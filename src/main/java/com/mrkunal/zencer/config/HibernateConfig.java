@@ -27,7 +27,7 @@ public class HibernateConfig {
         Properties settings = new Properties();
         settings.put(Environment.DRIVER, "org.postgresql.Driver");
         settings.put(Environment.DIALECT, "org.hibernate.dialect.PostgreSQLDialect");
-        settings.put(Environment.HBM2DDL_AUTO, "create"); // Change to `validate` or `none` for production
+        settings.put(Environment.HBM2DDL_AUTO, "update"); // Change to `validate` or `none` for production
         settings.put(Environment.SHOW_SQL, "true");
 
         sessionFactory.setDataSource(dataSource);
