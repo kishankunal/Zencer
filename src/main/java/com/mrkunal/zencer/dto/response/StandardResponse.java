@@ -1,30 +1,53 @@
 package com.mrkunal.zencer.dto.response;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
-@ToString
-@EqualsAndHashCode
-public class StandardResponse<T> {
-    private final boolean success;
-    private final String code;
-    private final String message;
-    private final T data;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
-    // Constructor for successful responses
+import java.util.List;
+import java.util.stream.Collectors;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class StandardResponse<T>
+{
+        private final boolean success;
+        private final String statusCode;
+        private final String message;
+        private  T data;
+        private  List<String> errorDetails ;
+
+    public StandardResponse(boolean success, String code, String message, List<String> errorDetails) {
+        this.success = success;
+        this.statusCode = code;
+        this.message = message;
+        this.errorDetails = errorDetails;
+    }
+
     public StandardResponse(boolean success, String code, String message, T data) {
         this.success = success;
-        this.code = code;
+        this.statusCode = code;
         this.message = message;
         this.data = data;
+    }
+
+
+    public static <T> StandardResponse<T> error(String code, String message, List<String> errorDetails) {
+        return new StandardResponse<>(false, code, message, errorDetails);
+    }
+
+    // Static factory method for success responses
+    public static <T> StandardResponse<T> success(String code, String message, T data) {
+        return new StandardResponse<>(true, code, message, data);
     }
 
     public boolean isSuccess() {
         return success;
     }
 
-    public String getCode() {
-        return code;
+    public String getStatusCode() {
+        return statusCode;
     }
 
     public String getMessage() {
@@ -35,39 +58,31 @@ public class StandardResponse<T> {
         return data;
     }
 
-    public static class Builder<T> {
-        private boolean success;
-        private String code;
-        private String message;
-        private T data;
+    public List<String> getErrorDetails() {
+        return errorDetails;
+    }
+    public static <T> StandardResponse<T> errorResponse(Exception ex) {
+        String code = ex.getClass().getSimpleName();
 
-        public Builder<T> success(boolean success) {
-            this.success = success;
-            return this;
-        }
+        // List of error details (you can add more error information here as needed)
+        List<String> errorDetails = List.of(ex.getMessage());
 
-        public Builder<T> code(String code) {
-            this.code = code;
-            return this;
-        }
-
-        public Builder<T> message(String message) {
-            this.message = message;
-            return this;
-        }
-
-        public Builder<T> data(T data) {
-            this.data = data;
-            return this;
-        }
-
-        public StandardResponse<T> build() {
-            return new StandardResponse<>(success, code, message, data);
-        }
+        // Create and return StandardResponse based on exception type
+        return switch (code) {
+            case "ValidationException" -> StandardResponse.error("400", "Validation Error", errorDetails);
+            case "AuthorizationException" -> StandardResponse.error("403", "Authorization Error", errorDetails);
+            case "ResourceNotFoundException" -> StandardResponse.error("404", "Resource Not Found", errorDetails);
+            default -> StandardResponse.error("500", "Internal Server Error", errorDetails);
+        };
     }
 
+    public static <T> ResponseEntity<StandardResponse<T>> handleValidationErrors(BindingResult bindingResult) {
+        List<String> errorMessages = bindingResult.getFieldErrors()
+                .stream()
+                .map(fieldError -> fieldError.getDefaultMessage())
+                .collect(Collectors.toList());
 
-    public static <T> StandardResponse<T> handleException(String code, String message, Exception ex) {
-        return new StandardResponse<>(false, code,  message, (T)ex.getMessage());
+        StandardResponse<T> errorResponse = StandardResponse.error("400", "Validation failed", errorMessages);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 }
