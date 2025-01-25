@@ -42,7 +42,7 @@ public class User {
     @Column(name = "locale", length = 64)
     private String locale;
 
-    @Column(name = "created_at", updatable = false, insertable = false)
+    @Column(name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 

@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -18,11 +19,14 @@ public class UserService {
         this.sessionFactory = sessionFactory;
     }
 
-    @Transactional
     public User createUser(User user) {
         Session session = sessionFactory.getCurrentSession();
         session.save(user);
         return user;
     }
 }
+
+// remove this autowired and use google juice for injection
+// resolve created at and updated at issue
+// standard response class
 

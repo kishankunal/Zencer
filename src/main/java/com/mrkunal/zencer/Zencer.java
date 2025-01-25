@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 @ComponentScan(basePackages = "com.mrkunal.zencer")
-@SpringBootApplication
+@SpringBootApplication(exclude = { JpaRepositoriesAutoConfiguration.class})
 public class Zencer {
 
 	public static void main(String[] args) {

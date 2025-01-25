@@ -21,9 +21,17 @@ public class UserResourceImpl implements UserResource {
 //                .data(userService.createUser(user))
 //                .code("200")
 //                .message("fds")
+//                .build();x
+        User user1 = userService.createUser(user);
+//        return StandardResponse.<User>buildResponse()
+//                .success(true)
+//                .code("200")
+//                .message("User created successfully")
+//                .data(user1)
 //                .build();
+//        return new StandardResponse<>(true, "User created successfully", user1);
 
-        return ResponseEntity.ok(userService.createUser(user));
+        return ResponseEntity.ok(userService.createUser(user1));
     }
 
 }
