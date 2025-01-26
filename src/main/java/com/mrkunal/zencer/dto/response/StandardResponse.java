@@ -72,6 +72,7 @@ public class StandardResponse<T>
             case "ValidationException" -> StandardResponse.error("400", "Validation Error", errorDetails);
             case "AuthorizationException" -> StandardResponse.error("403", "Authorization Error", errorDetails);
             case "ResourceNotFoundException" -> StandardResponse.error("404", "Resource Not Found", errorDetails);
+            case "JwtException" -> StandardResponse.error("401", "JWT Authorization error", errorDetails);
             default -> StandardResponse.error("500", "Internal Server Error", errorDetails);
         };
     }

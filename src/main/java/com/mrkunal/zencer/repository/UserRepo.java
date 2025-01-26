@@ -14,8 +14,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import static com.mrkunal.zencer.util.HashUtil.encryptPassword;
-
 @Repository
 public class UserRepo {
     private final SessionFactory sessionFactory;
@@ -32,10 +30,8 @@ public class UserRepo {
         User user = getUser(request);
         Session session = sessionFactory.getCurrentSession();
         session.save(user);
+        session.evict(user);
     }
-
-
-
 
     public User findByMobileNumber(final String mobileNumber) {
         Session session = sessionFactory.getCurrentSession();
@@ -62,7 +58,6 @@ public class UserRepo {
             return user;
         }
         catch(Exception e){
-            System.out.println(e.getMessage());
             throw new RuntimeException("Failed to fetch user by mobile number - " +e.getMessage() , e );
         }
     }
