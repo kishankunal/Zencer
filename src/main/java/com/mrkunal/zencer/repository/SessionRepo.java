@@ -13,14 +13,16 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
+import static com.mrkunal.zencer.constant.DatabaseConstant.USER;
+import static com.mrkunal.zencer.constant.DatabaseConstant.TOKEN;
+import static com.mrkunal.zencer.constant.DatabaseConstant.TOKEN_STATUS;
+import static com.mrkunal.zencer.constant.ExceptionMessageConstant.FAILED_TO_FETCH_USER_SESSION;
+
 
 @Repository
 public class SessionRepo {
 
     private final SessionFactory sessionFactory;
-    private final String USER = "user";
-    private final String TOKEN = "token";
-    private final String TOKEN_STATUS = "tokenStatus";
 
     @Inject
     public SessionRepo(SessionFactory sessionFactory) {
@@ -55,7 +57,7 @@ public class SessionRepo {
 
             return userSession;
         } catch (Exception e){
-            throw new RuntimeException("Failed to fetch users-sessions- " +e.getMessage() , e );
+            throw new RuntimeException(FAILED_TO_FETCH_USER_SESSION +e.getMessage(), e );
         }
     }
 
@@ -79,11 +81,11 @@ public class SessionRepo {
             UserSession userSession = query.getResultList().stream().findFirst().orElse(null);
 
             if (userSession != null) {
-                session.evict(userSession);  // Detach the entity from session
+                session.evict(userSession);
             }
             return userSession;
         } catch (Exception e){
-            throw new RuntimeException("Failed to fetch users-sessions- " + e.getMessage() , e );
+            throw new RuntimeException(FAILED_TO_FETCH_USER_SESSION + e.getMessage(), e );
         }
     }
 

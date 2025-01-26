@@ -25,7 +25,6 @@ public class Zencer {
 		return Guice.createInjector(
 				new ExternalModule(),
 				new ApplicationModule()
-
 		);
 	}
 }

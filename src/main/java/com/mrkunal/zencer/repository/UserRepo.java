@@ -14,11 +14,13 @@ import org.hibernate.SessionFactory;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
+import static com.mrkunal.zencer.constant.DatabaseConstant.MOBILE_NO;
+import static com.mrkunal.zencer.constant.ExceptionMessageConstant.FAILED_TO_FETCH_USER;
+
 @Repository
 public class UserRepo {
     private final SessionFactory sessionFactory;
     private final BCryptPasswordEncoder passwordEncoder;
-    private static final String MOBILE_NO = "mobileNumber";
 
     @Inject
     public UserRepo(SessionFactory sessionFactory, BCryptPasswordEncoder passwordEncoder) {
@@ -39,26 +41,21 @@ public class UserRepo {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
 
-            // Define the root of the query (i.e., the User entity)
             Root<User> root = criteriaQuery.from(User.class);
 
-            // Apply the condition on mobileNumber
             criteriaQuery.select(root)
                     .where(criteriaBuilder.equal(root.get(MOBILE_NO), mobileNumber));
 
-            // Execute the query
             TypedQuery<User> query = session.createQuery(criteriaQuery);
             User user = query.getResultList().stream().findFirst().orElse(null);
 
-            // Detach the user to prevent automatic persistence
             if (user != null) {
-                session.evict(user);  // Detach the entity from session
+                session.evict(user);
             }
-
             return user;
         }
         catch(Exception e){
-            throw new RuntimeException("Failed to fetch user by mobile number - " +e.getMessage() , e );
+            throw new RuntimeException(FAILED_TO_FETCH_USER +e.getMessage(), e );
         }
     }
 
@@ -66,8 +63,8 @@ public class UserRepo {
     public void onShutdown() {
         Session session = sessionFactory.getCurrentSession();
         if (session != null) {
-            session.flush(); // Ensures all pending operations are flushed to DB
-            session.clear(); // Clears session cache
+            session.flush();
+            session.clear();
         }
     }
 

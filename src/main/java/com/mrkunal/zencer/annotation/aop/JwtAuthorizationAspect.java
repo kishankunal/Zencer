@@ -2,7 +2,6 @@ package com.mrkunal.zencer.annotation.aop;
 
 import com.google.inject.Inject;
 import com.mrkunal.zencer.annotation.JwtAuth;
-import com.mrkunal.zencer.model.enums.TokenStatus;
 import com.mrkunal.zencer.repository.SessionRepo;
 import com.mrkunal.zencer.util.JwtUtil;
 import io.jsonwebtoken.Claims;

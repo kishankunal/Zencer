@@ -11,7 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.google.inject.Inject;
 
-import static com.mrkunal.zencer.util.JwtUtil.getUseridFromJwtToken;
+import static com.mrkunal.zencer.constant.ExceptionMessageConstant.INVALID_MOBILE_NUMBER_OR_PASSWORD;
+
 
 @Service
 public class UserService {
@@ -36,7 +37,7 @@ public class UserService {
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             return createOrUpdateToken(user);
         }
-        throw new RuntimeException("Invalid mobile number or password");
+        throw new RuntimeException(INVALID_MOBILE_NUMBER_OR_PASSWORD);
 
     }
 
@@ -65,25 +66,5 @@ public class UserService {
         }
 
     }
-
-
-//    public void logout(String token) {
-//        // Extract userId from the token
-//        Claims claims = JwtUtil.validateToken(token);
-//        String userId = claims.get("userId", String.class);
-//
-//        // Mark the session as invalid in the database
-//        Optional<Session> session = sessionRepository.findByUserIdAndTokenStatus(userId, TokenStatus.VALID);
-//        if (session.isPresent()) {
-//            Session existingSession = session.get();
-//            existingSession.setTokenStatus(TokenStatus.INVALID); // Mark token as invalid
-//            sessionRepository.save(existingSession);  // Persist the change
-//        }
-//
-//        // Client deletes the token from storage (localStorage/sessionStorage)
-//        // Example: localStorage.removeItem("jwtToken");
-//
-//        // Optionally, redirect to the login page
-//    }
 }
 
