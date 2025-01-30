@@ -1,4 +1,4 @@
-package com.mrkunal.zencer.dto.request;
+package com.mrkunal.zencer.dto.request.user;
 
 import com.mrkunal.zencer.model.enums.UserType;
 import jakarta.validation.constraints.NotNull;
@@ -29,7 +29,7 @@ public class SignUpRequest {
     private final String password;
 
     // Constructor, getters, setters, etc.
-    public SignUpRequest(String name, String mobileNo, String mobileNumber, Locale locale, UserType userType, @NotNull(message = "Password cannot be null") String password) {
+    public SignUpRequest(String name, String mobileNo, String mobileNumber, Locale locale, UserType userType, String password) {
         this.name = name;
         this.mobileNumber = mobileNumber;
         this.locale = locale;

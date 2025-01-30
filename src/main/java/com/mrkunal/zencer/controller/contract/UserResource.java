@@ -1,7 +1,7 @@
 package com.mrkunal.zencer.controller.contract;
 
-import com.mrkunal.zencer.dto.request.SignInRequest;
-import com.mrkunal.zencer.dto.request.SignUpRequest;
+import com.mrkunal.zencer.dto.request.user.SignInRequest;
+import com.mrkunal.zencer.dto.request.user.SignUpRequest;
 import com.mrkunal.zencer.dto.response.SignInResponse;
 import com.mrkunal.zencer.dto.response.StandardResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RequestMapping("/v1/user")
-@Tag(name = "user management API", description = "Api for user")
+@Tag(name = "User Resource", description = "User management API")
 public interface UserResource {
 
     @PostMapping(path = "/signup", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

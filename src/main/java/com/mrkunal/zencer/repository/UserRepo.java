@@ -1,7 +1,7 @@
 package com.mrkunal.zencer.repository;
 
 import com.google.inject.Inject;
-import com.mrkunal.zencer.dto.request.SignUpRequest;
+import com.mrkunal.zencer.dto.request.user.SignUpRequest;
 import com.mrkunal.zencer.model.Entity.User;
 import jakarta.annotation.PreDestroy;
 import jakarta.persistence.TypedQuery;
@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import static com.mrkunal.zencer.constant.DatabaseConstant.MOBILE_NO;
+import static com.mrkunal.zencer.constant.DatabaseConstant.USER_ID;
 import static com.mrkunal.zencer.constant.ExceptionMessageConstant.FAILED_TO_FETCH_USER;
 
 @Repository
@@ -68,9 +69,33 @@ public class UserRepo {
         }
     }
 
+    public User getUserFromUserId(final String userId) {
+        Session session = sessionFactory.getCurrentSession();
+        try{
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+
+            Root<User> root = criteriaQuery.from(User.class);
+
+            criteriaQuery.select(root)
+                    .where(criteriaBuilder.equal(root.get(USER_ID), userId));
+
+            TypedQuery<User> query = session.createQuery(criteriaQuery);
+            User user = query.getResultList().stream().findFirst().orElse(null);
+
+            if (user != null) {
+                session.evict(user);
+            }
+            return user;
+        }
+        catch(Exception e){
+            throw new RuntimeException(FAILED_TO_FETCH_USER +e.getMessage(), e );
+        }
+    }
+
     private User getUser(SignUpRequest request) {
         return new User.UserBuilder()
-                .setUserType(request.getUserType())
+                .setUserType(request.getUserType().toString())
                 .setLocale(request.getLocale())
                 .setName(request.getName())
                 .setMobileNumber(request.getMobileNumber())

@@ -45,7 +45,7 @@ public class SessionRepo {
             criteriaQuery.select(root)
                     .where(criteriaBuilder.and(
                             criteriaBuilder.equal(root.get(USER), user),
-                            criteriaBuilder.equal(root.get(TOKEN_STATUS), tokenStatus)
+                            criteriaBuilder.equal(root.get(TOKEN_STATUS), tokenStatus.name())
                     ));
 
             TypedQuery<UserSession> query = session.createQuery(criteriaQuery);
@@ -73,7 +73,7 @@ public class SessionRepo {
                     .where(
                             criteriaBuilder.and(
                                     criteriaBuilder.equal(root.get(TOKEN), token),  // Token condition
-                                    criteriaBuilder.equal(root.get(TOKEN_STATUS), tokenStatus) // Token status condition
+                                    criteriaBuilder.equal(root.get(TOKEN_STATUS), tokenStatus.name()) // Token status condition
                             )
                     );
 
@@ -97,7 +97,7 @@ public class SessionRepo {
     public void invalidateSession(UserSession userSession) {
         Session session = sessionFactory.getCurrentSession();
         Transaction transaction = session.beginTransaction();
-        userSession.setTokenStatus(TokenStatus.INVALID);
+        userSession.setTokenStatus(TokenStatus.INVALID.name());
         session.update(userSession);
         transaction.commit();
         session.evict(userSession);

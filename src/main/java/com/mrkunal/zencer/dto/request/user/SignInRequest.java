@@ -1,4 +1,4 @@
-package com.mrkunal.zencer.dto.request;
+package com.mrkunal.zencer.dto.request.user;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

@@ -5,8 +5,8 @@ import com.mrkunal.zencer.annotation.HandleApiException;
 import com.mrkunal.zencer.annotation.HandleValidationError;
 import com.mrkunal.zencer.annotation.JwtAuth;
 import com.mrkunal.zencer.controller.contract.UserResource;
-import com.mrkunal.zencer.dto.request.SignInRequest;
-import com.mrkunal.zencer.dto.request.SignUpRequest;
+import com.mrkunal.zencer.dto.request.user.SignInRequest;
+import com.mrkunal.zencer.dto.request.user.SignUpRequest;
 import com.mrkunal.zencer.dto.response.SignInResponse;
 import com.mrkunal.zencer.dto.response.StandardResponse;
 import com.mrkunal.zencer.service.UserService;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @HandleApiException
-
 public class UserResourceImpl implements UserResource {
     private final UserService userService;
 

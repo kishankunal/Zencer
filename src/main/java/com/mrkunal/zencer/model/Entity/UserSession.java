@@ -25,9 +25,8 @@ public class UserSession {
     @Column(name = "token", nullable = false, length = 512)
     private String token;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "token_status", nullable = false)
-    private TokenStatus tokenStatus;
+    private String tokenStatus;
 
     @Column(name = "created_at", updatable = false, nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -39,7 +38,7 @@ public class UserSession {
 
     public UserSession() {}
 
-    public UserSession(User user, String token, TokenStatus tokenStatus) {
+    public UserSession(User user, String token, String tokenStatus) {
         this.user = user;
         this.token = token;
         this.tokenStatus = tokenStatus;
@@ -86,11 +85,11 @@ public class UserSession {
         this.token = token;
     }
 
-    public TokenStatus getTokenStatus() {
+    public String getTokenStatus() {
         return tokenStatus;
     }
 
-    public void setTokenStatus(TokenStatus tokenStatus) {
+    public void setTokenStatus(String tokenStatus) {
         this.tokenStatus = tokenStatus;
     }
 

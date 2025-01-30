@@ -50,8 +50,7 @@ public class User {
 
     @JsonProperty
     @Column(name = "user_identifier", nullable = false, length = 64)
-    @Enumerated(EnumType.STRING)
-    private UserType userType;
+    private String userType;
 
     @JsonProperty
     @Column(name = "password", nullable = false, length = 256)  // Adjust length as per your hashing strategy
@@ -118,11 +117,11 @@ public class User {
         this.name = name;
     }
 
-    public UserType getUserType() {
+    public String getUserType() {
         return userType;
     }
 
-    public void setUserType(UserType userType) {
+    public void setUserType(String userType) {
         this.userType = userType;
     }
 
@@ -154,7 +153,7 @@ public class User {
         private String mobileNumber;
         private String name;
         private String password;
-        private UserType userType;
+        private String userType;
         private Locale locale;
 
         public UserBuilder setPassword(String password) {
@@ -172,7 +171,7 @@ public class User {
             return this;
         }
 
-        public UserBuilder setUserType(UserType userType) {
+        public UserBuilder setUserType(String userType) {
             this.userType = userType;
             return this;
         }

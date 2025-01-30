@@ -4,13 +4,14 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.experimental.UtilityClass;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
-import static com.mrkunal.zencer.constant.Constants.SECRET_KEY_VALUE;
+import static com.mrkunal.zencer.constant.GenericConstants.SECRET_KEY_VALUE;
 import static com.mrkunal.zencer.constant.DatabaseConstant.*;
 
 @UtilityClass
@@ -42,6 +43,14 @@ public class JwtUtil {
     public static String getUseridFromJwtToken(final String token) {
         Claims claims = JwtUtil.validateToken(token);
         return claims.get(USER_ID, String.class);
+    }
+
+    public static String getTokenFromHeader(final HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7); // Extract token
+        }
+        return token;
     }
 
 }

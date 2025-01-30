@@ -5,7 +5,7 @@ import com.mrkunal.zencer.model.Entity.User;
 import com.mrkunal.zencer.model.enums.TokenStatus;
 import com.mrkunal.zencer.repository.SessionRepo;
 import com.mrkunal.zencer.repository.UserRepo;
-import com.mrkunal.zencer.dto.request.SignUpRequest;
+import com.mrkunal.zencer.dto.request.user.SignUpRequest;
 import com.mrkunal.zencer.util.JwtUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -49,7 +49,7 @@ public class UserService {
             jwtToken = existingSession.getToken();
         } else {
             jwtToken = JwtUtil.generateJwtToken(user.getUserId(), user.getUserType().toString());
-            UserSession userSession = new UserSession(user, jwtToken, TokenStatus.VALID);
+            UserSession userSession = new UserSession(user, jwtToken, TokenStatus.VALID.name());
             sessionRepo.save(userSession);
         }
         return jwtToken;
@@ -64,7 +64,6 @@ public class UserService {
         } catch (Exception e){
             return false;
         }
-
     }
 }
 

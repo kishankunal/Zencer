@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 
 import java.security.MessageDigest;
 
-import static com.mrkunal.zencer.constant.Constants.*;
+import static com.mrkunal.zencer.constant.GenericConstants.*;
 import static com.mrkunal.zencer.constant.ExceptionMessageConstant.ERROR_WHILE_ENCRYPTING_PASSWORD;
 
 @UtilityClass
