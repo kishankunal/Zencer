@@ -47,6 +47,14 @@ public class UserService {
         String jwtToken;
         if (existingSession!=null) {
             jwtToken = existingSession.getToken();
+            try{
+                JwtUtil.validateToken(jwtToken);
+            } catch (Exception e){
+                sessionRepo.invalidateSession(existingSession);
+                jwtToken = JwtUtil.generateJwtToken(user.getUserId(), user.getUserType().toString());
+                UserSession userSession = new UserSession(user, jwtToken, TokenStatus.VALID.name());
+                sessionRepo.save(userSession);
+            }
         } else {
             jwtToken = JwtUtil.generateJwtToken(user.getUserId(), user.getUserType().toString());
             UserSession userSession = new UserSession(user, jwtToken, TokenStatus.VALID.name());
@@ -64,6 +72,10 @@ public class UserService {
         } catch (Exception e){
             return false;
         }
+    }
+
+    public User getUserFromUserId(String token) {
+        return userRepo.getUserFromUserId(token);
     }
 }
 

@@ -19,8 +19,8 @@ import javax.ws.rs.core.Context;
 public interface ShopResource {
 
     @PostMapping(path = "/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    ResponseEntity<StandardResponse<String>> registerShop(@Valid @RequestBody RegisterShopRequest registerShopRequest,
-                                                          @Context HttpServletRequest request, BindingResult bindingResult);
+    ResponseEntity<StandardResponse<String>> registerShop(@Valid @RequestBody RegisterShopRequest registerShopRequest, BindingResult bindingResult,
+                                                          @Context HttpServletRequest request);
 
     @GetMapping(path = "/activate/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<StandardResponse<String>> activateShop(@PathVariable("shopId") String shopId);
@@ -30,5 +30,8 @@ public interface ShopResource {
 
     @GetMapping(path = "/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<StandardResponse<ShopDetailsResponse>> getShopDetails(@PathVariable("shopId") String shopId);
+
+    @GetMapping(path = "getAllProducts/{shopId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity<StandardResponse<ShopDetailsResponse>> getAllProducts(@PathVariable("shopId") String shopId);
 
 }

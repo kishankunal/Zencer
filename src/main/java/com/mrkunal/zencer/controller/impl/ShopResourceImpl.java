@@ -7,8 +7,8 @@ import com.mrkunal.zencer.annotation.JwtAuth;
 import com.mrkunal.zencer.constant.GenericConstants;
 import com.mrkunal.zencer.controller.contract.ShopResource;
 import com.mrkunal.zencer.dto.request.shop.RegisterShopRequest;
-import com.mrkunal.zencer.dto.request.user.SignUpRequest;
 import com.mrkunal.zencer.dto.response.StandardResponse;
+import com.mrkunal.zencer.dto.response.product.ProductDetailsResponse;
 import com.mrkunal.zencer.dto.response.shop.ShopDetailsResponse;
 import com.mrkunal.zencer.model.Entity.Shop;
 import com.mrkunal.zencer.model.Entity.User;
@@ -18,6 +18,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 import static com.mrkunal.zencer.util.JwtUtil.getTokenFromHeader;
 import static com.mrkunal.zencer.util.JwtUtil.getUseridFromJwtToken;
@@ -39,8 +41,8 @@ public class ShopResourceImpl implements ShopResource {
     @JwtAuth(roles = {GenericConstants.AGENT})
     @HandleValidationError
     public ResponseEntity<StandardResponse<String>> registerShop(RegisterShopRequest registerShopRequest,
-                                                                 HttpServletRequest request,
-                                                                 BindingResult bindingResult) {
+                                                                 BindingResult bindingResult,
+                                                                 HttpServletRequest request) {
         String token = getTokenFromHeader(request);
         User user = userRepo.getUserFromUserId(getUseridFromJwtToken(token));
         shopService.createShop(registerShopRequest, user);
@@ -75,12 +77,17 @@ public class ShopResourceImpl implements ShopResource {
     @Override
     @JwtAuth
     public ResponseEntity<StandardResponse<ShopDetailsResponse>> getShopDetails(String shopId) {
-        if(shopId == null){
-            return ResponseEntity.ok(
-                    StandardResponse.error("400", "Shop id cannot be null", null));
-        }
         Shop shop = shopService.getShopDetails(shopId);
         return ResponseEntity.ok(
-                StandardResponse.success("200", "success", ShopDetailsResponse.fromEntity(shop)));
+                StandardResponse.success("200", "success", ShopDetailsResponse.fromEntity(shop, null)));
+    }
+
+    @Override
+    @JwtAuth
+    public ResponseEntity<StandardResponse<ShopDetailsResponse>> getAllProducts(String shopId) {
+        Shop shop = shopService.getShopDetails(shopId);
+        List<ProductDetailsResponse> productDetailsResponses = shopService.getAllProducts(shop);
+        return ResponseEntity.ok(
+                StandardResponse.success("200", "success", ShopDetailsResponse.fromEntity(shop, productDetailsResponses)));
     }
 }

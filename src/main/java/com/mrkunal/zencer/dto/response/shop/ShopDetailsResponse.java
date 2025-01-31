@@ -1,9 +1,11 @@
 package com.mrkunal.zencer.dto.response.shop;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.mrkunal.zencer.dto.response.product.ProductDetailsResponse;
 import com.mrkunal.zencer.model.Entity.Shop;
 import com.mrkunal.zencer.model.enums.Status;
 import java.util.Date;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ShopDetailsResponse {
@@ -24,12 +26,23 @@ public class ShopDetailsResponse {
 
     private String gstin;
 
+    public List<ProductDetailsResponse> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<ProductDetailsResponse> productList) {
+        this.productList = productList;
+    }
+
     private Status status;
 
     private Date createdAt;
 
+    private List<ProductDetailsResponse> productList;
+
     public ShopDetailsResponse(String shopId, String agentId, String shopName, String city, String pincode,
-                        String state, String country, String gstin, Status status, Date createdAt) {
+                               String state, String country, String gstin, Status status, Date createdAt,
+                               List<ProductDetailsResponse> productList) {
         this.shopId = shopId;
         this.agentId = agentId;
         this.shopName = shopName;
@@ -40,9 +53,10 @@ public class ShopDetailsResponse {
         this.gstin = gstin;
         this.status = status;
         this.createdAt = createdAt;
+        this.productList = productList;
     }
 
-    public static ShopDetailsResponse fromEntity(Shop shop) {
+    public static ShopDetailsResponse fromEntity(Shop shop, List<ProductDetailsResponse> productList) {
         return new ShopDetailsResponse(
                 shop.getShopId(),
                 shop.getUser().getUserId(),
@@ -53,7 +67,8 @@ public class ShopDetailsResponse {
                 shop.getCountry(),
                 shop.getGstin(),
                 shop.getStatus(),
-                shop.getCreatedAt()
+                shop.getCreatedAt(),
+                productList
         );
     }
 

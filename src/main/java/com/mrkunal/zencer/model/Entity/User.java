@@ -1,6 +1,5 @@
 package com.mrkunal.zencer.model.Entity;
 
-import com.mrkunal.zencer.model.enums.UserType;
 import com.mrkunal.zencer.model.enums.Locale;
 import lombok.ToString;
 import jakarta.persistence.Entity;
