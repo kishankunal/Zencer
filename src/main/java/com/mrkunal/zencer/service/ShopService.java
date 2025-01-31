@@ -40,6 +40,8 @@ public class ShopService {
     }
 
     public List<ProductDetailsResponse> getAllProducts(Shop shop) {
-        return productRepo.getAllProducts(shop);
+        return productRepo.getAllProducts(shop).stream()
+                .map(ProductDetailsResponse::fromEntity)
+                .toList();
     }
 }

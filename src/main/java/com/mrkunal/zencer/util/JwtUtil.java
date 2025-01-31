@@ -45,6 +45,11 @@ public class JwtUtil {
         return claims.get(USER_ID, String.class);
     }
 
+    public static String getRoleFromToken(final String token){
+        Claims claims = JwtUtil.validateToken(token);
+        return claims.get(ROLE, String.class);
+    }
+
     public static String getTokenFromHeader(final HttpServletRequest request) {
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {

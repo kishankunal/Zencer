@@ -32,6 +32,14 @@ public class StandardResponse<T>
         this.data = data;
     }
 
+    public <T> StandardResponse(boolean success, String code, String message, T data, List<String> errorDetails) {
+        this.success = success;
+        this.statusCode = code;
+        this.message = message;
+        this.errorDetails = errorDetails;
+        this.errorDetails = errorDetails;
+    }
+
 
     public static <T> StandardResponse<T> error(String code, String message, List<String> errorDetails) {
         return new StandardResponse<>(false, code, message, errorDetails);
@@ -40,6 +48,10 @@ public class StandardResponse<T>
     // Static factory method for success responses
     public static <T> StandardResponse<T> success(String code, String message, T data) {
         return new StandardResponse<>(true, code, message, data);
+    }
+
+    public static <T> StandardResponse<T> successWithIssues(String code, String message, T data, List<String> errorDetails) {
+        return new StandardResponse<>(true, code, message, data, errorDetails);
     }
 
     public boolean isSuccess() {

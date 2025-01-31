@@ -2,24 +2,21 @@ package com.mrkunal.zencer.repository;
 
 import com.google.inject.Inject;
 import com.mrkunal.zencer.dto.request.product.AddProductRequest;
-import com.mrkunal.zencer.dto.response.product.ProductDetailsResponse;
 import com.mrkunal.zencer.model.Entity.Product;
 import com.mrkunal.zencer.model.Entity.Shop;
-import com.mrkunal.zencer.model.Entity.User;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.mrkunal.zencer.constant.DatabaseConstant.*;
 import static com.mrkunal.zencer.constant.ExceptionMessageConstant.FAILED_TO_FETCH_PRODUCT;
-import static com.mrkunal.zencer.constant.ExceptionMessageConstant.FAILED_TO_FETCH_USER;
 
 
 @Repository
@@ -64,6 +61,8 @@ public class ProductRepo {
 
             if (product != null) {
                 session.evict(product);
+            } else {
+                throw new RuntimeException("Invalid product id");
             }
             return product;
         }
@@ -72,7 +71,7 @@ public class ProductRepo {
         }
     }
 
-    public List<ProductDetailsResponse> getAllProducts(Shop shop) {
+    public List<Product> getAllProducts(Shop shop) {
         Session session = sessionFactory.getCurrentSession();
         try {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
@@ -85,18 +84,69 @@ public class ProductRepo {
             TypedQuery<Product> query = session.createQuery(criteriaQuery);
             List<Product> products = query.getResultList(); // Removed unnecessary casting and stream
 
-            // Transform List<Product> to List<ProductDetailsResponse>
-            List<ProductDetailsResponse> productDetailsResponses = products.stream()
-                    .map(ProductDetailsResponse::fromEntity)
-                    .collect(Collectors.toList());
+            if (products != null) {
+                products.forEach(session::evict); // Evict each product to detach from session
+            }
+
+            return products;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch product: " + e.getMessage(), e);
+        }
+    }
+
+    public void updateProductsPrice(Product product, double updatePrice) {
+        Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        product.setPrice(updatePrice);
+        session.update(product);
+        transaction.commit();
+        session.evict(product);
+    }
+
+    public List<Product> getProductsByName(String productName) {
+        Session session = sessionFactory.getCurrentSession();
+        try {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
+            Root<Product> root = criteriaQuery.from(Product.class);
+
+            criteriaQuery.select(root)
+                    .where(criteriaBuilder.like(criteriaBuilder.lower(root.get(PRODUCT_NAME)),
+                            "%" + productName.toLowerCase() + "%"));
+
+            TypedQuery<Product> query = session.createQuery(criteriaQuery);
+            List<Product> products = query.getResultList(); // Removed unnecessary casting and stream
 
             if (products != null) {
                 products.forEach(session::evict); // Evict each product to detach from session
             }
 
-            return productDetailsResponses;
+            return products;
         } catch (Exception e) {
             throw new RuntimeException("Failed to fetch product: " + e.getMessage(), e);
         }
+    }
+
+    public void increaseProductQuantity(Product product, int quantity) {
+        Session session = sessionFactory.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        int currentQuantity = product.getQuantity();
+        product.setQuantity(currentQuantity + quantity);
+        session.update(product);
+        transaction.commit();
+        session.evict(product);
+    }
+
+    public void decreaseProductQuantity(Product product, int quantity) {
+        Session session = sessionFactory.getCurrentSession();
+        int currentQuantity = product.getQuantity();
+        if(currentQuantity - quantity < 0){
+            throw new RuntimeException("Quantity of product required is not available");
+        }
+        product.setQuantity(currentQuantity - quantity);
+        Transaction transaction = session.beginTransaction();
+        session.update(product);
+        transaction.commit();
+        session.evict(product);
     }
 }

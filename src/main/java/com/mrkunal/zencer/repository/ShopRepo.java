@@ -5,7 +5,6 @@ import com.mrkunal.zencer.dto.request.shop.RegisterShopRequest;
 import com.mrkunal.zencer.model.Entity.Shop;
 import com.mrkunal.zencer.model.Entity.User;
 import com.mrkunal.zencer.model.enums.Status;
-import com.mrkunal.zencer.model.enums.TokenStatus;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -17,7 +16,6 @@ import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 import static com.mrkunal.zencer.constant.DatabaseConstant.SHOP_ID;
-import static com.mrkunal.zencer.constant.DatabaseConstant.USER_ID;
 import static com.mrkunal.zencer.constant.ExceptionMessageConstant.*;
 
 @Repository

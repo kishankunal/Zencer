@@ -14,4 +14,7 @@ public class SignInResponse {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public static class BillItemResponse {
+    }
 }

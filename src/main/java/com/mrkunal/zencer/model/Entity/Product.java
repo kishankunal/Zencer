@@ -7,7 +7,10 @@ import java.util.Date;
 
 @Entity
 @Table(name = "products", uniqueConstraints = {@UniqueConstraint(columnNames = {"product_id"})},
-        indexes = {@Index(name = "idx_product_id", columnList = "product_id")})
+        indexes ={
+                @Index(name = "idx_product_id", columnList = "product_id"),
+                @Index(name = "idx_product_category", columnList = "category")
+        })
 public class Product {
 
     @Id
